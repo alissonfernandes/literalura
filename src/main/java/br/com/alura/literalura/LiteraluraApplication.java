@@ -1,5 +1,6 @@
 package br.com.alura.literalura;
 
+import br.com.alura.literalura.service.BookService;
 import br.com.alura.literalura.view.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

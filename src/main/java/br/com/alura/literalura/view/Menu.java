@@ -1,8 +1,10 @@
 package br.com.alura.literalura.view;
 
-import br.com.alura.literalura.BookService;
-
+import br.com.alura.literalura.dto.Book;
+import br.com.alura.literalura.service.BookService;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Menu {
 
@@ -38,7 +40,26 @@ public class Menu {
     private void searchBookByTitle() {
         System.out.print("Digite o título do livro: ");
         String title = scanner.nextLine();
-        String response = bookService.search(title);
-        System.out.println(response);
+        Book book = bookService.search(title);
+
+        String mensage = """
+                Título: %s
+                Autores: %s
+                Linguagem: %s
+                Downloads: %d
+                """;
+        List<String> authors = book.authors().stream().map(a -> a.name()).collect(Collectors.toList());
+
+        String author = "";
+        for (String authorBook : authors) author += authorBook;
+
+        String language = "";
+        for (String languageBook : book.languages()) language += languageBook;
+
+        System.out.println(String.format(mensage,
+                book.title(),
+                author,
+                language,
+                book.downloadCount()));
     }
 }
