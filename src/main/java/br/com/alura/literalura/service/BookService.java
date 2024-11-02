@@ -2,7 +2,6 @@ package br.com.alura.literalura.service;
 
 import br.com.alura.literalura.dto.Book;
 import br.com.alura.literalura.dto.Search;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,25 +12,18 @@ public class BookService {
 
     private ObjectMapper mapper = new ObjectMapper();
     private ConsumeService consumeService;
+    private ConvertsData convertsData;
 
     public BookService() {
         consumeService = new ConsumeService();
+        convertsData = new ConvertsData();
     }
 
     public Book search(String bookName) {
         URI uri = URI.create("http://gutendex.com/books/?search=" + bookName.replace(" ", "%20"));
-        String jsonReponse = consumeService.get(uri);
-        Search search = toObject(jsonReponse);
+        String jsonResponse = consumeService.get(uri);
+        Search search = convertsData.getDataObject(jsonResponse, Search.class);
         return search.results().get(0);
     }
 
-    private <T> T toObject(String json) {
-        try {
-            Search search = mapper.readValue(json, Search.class);
-            return (T) search;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
