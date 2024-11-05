@@ -1,18 +1,29 @@
 package br.com.alura.literalura.service;
 
+import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
 import br.com.alura.literalura.dto.Search;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import br.com.alura.literalura.model.AuthorModel;
+import br.com.alura.literalura.model.BookModel;
+import br.com.alura.literalura.repository.AuthorRepository;
+import br.com.alura.literalura.repository.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.Optional;
 
 @Service
 public class BookService {
 
-    private ObjectMapper mapper = new ObjectMapper();
     private ConsumeService consumeService;
     private ConvertsData convertsData;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
 
     public BookService() {
         consumeService = new ConsumeService();
@@ -24,6 +35,20 @@ public class BookService {
         String jsonResponse = consumeService.get(uri);
         Search search = convertsData.getDataObject(jsonResponse, Search.class);
         return search.results().get(0);
+    }
+
+    public void save(Book book) {
+        BookModel bookToSave = new BookModel(book);
+
+        Optional<AuthorModel> authorFound = authorRepository.findByName(book.authors().get(0).name());
+
+        if (authorFound.isPresent()) bookToSave.setAuthor(authorFound.get());
+        else {
+            Author author = book.authors().get(0);
+            AuthorModel authorSaved = authorRepository.save(new AuthorModel(author));
+            bookToSave.setAuthor(authorSaved);
+        }
+        bookRepository.save(bookToSave);
     }
 
 }

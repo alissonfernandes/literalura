@@ -61,5 +61,9 @@ public class Menu {
                 author,
                 language,
                 book.downloadCount()));
+
+        System.out.println("Salvar " + book.title() + " no bando de dados [s/n]");
+        String res = scanner.nextLine();
+        if (res.equals("s")) bookService.save(book);
     }
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,8 +22,8 @@ public class AuthorModel {
     private Integer birthYear;
     private Integer deathYear;
 
-    @ManyToOne
-    private BookModel book;
+    @OneToMany(mappedBy = "author")
+    private List<BookModel> books;
 
     public AuthorModel(Author authorDTO) {
         name = authorDTO.name();

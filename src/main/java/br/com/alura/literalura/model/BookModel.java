@@ -20,15 +20,16 @@ public class BookModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @OneToMany(mappedBy = "book")
-    private List<AuthorModel> authors;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private AuthorModel author;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<LanguageModel> languages;
 
     public BookModel(Book bookDTO) {
         title = bookDTO.title();
-        authors = bookDTO.authors().stream().map(a -> new AuthorModel(a)).collect(Collectors.toList());
+        author = new AuthorModel(bookDTO.authors().get(0));
         languages = bookDTO.languages().stream().map(l -> new LanguageModel(l)).collect(Collectors.toList());
     }
 }
