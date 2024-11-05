@@ -73,6 +73,17 @@ public class Menu {
 
     private void getAllBooks(){
         List<Book> books = bookService.getAllBooks();
-        System.out.println(books.toString());
+        System.out.println("");
+        books.forEach(b -> {
+            String show = """
+                    ----- LIVRO -----
+                    Título: %s
+                    Autor: %s
+                    Indioma: %s
+                    Número de downloads: %d
+                    ------------------
+                    """;
+            System.out.println(String.format(show, b.title(), b.authors().getFirst().name(), b.languages().getFirst(), b.downloadCount()));
+        });
     }
 }
