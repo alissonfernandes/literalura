@@ -57,4 +57,9 @@ public class BookService {
         return convertsData.bookModelToBookDTO(bookFound);
     }
 
+    public List<Author> getAllAuthor() {
+        List<AuthorModel> authorFound = authorRepository.findAll();
+        return convertsData.authorModelToAuthorDTO(authorFound);
+    }
+
 }

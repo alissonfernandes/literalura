@@ -2,6 +2,7 @@ package br.com.alura.literalura.service;
 
 import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
+import br.com.alura.literalura.model.AuthorModel;
 import br.com.alura.literalura.model.BookModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,4 +37,8 @@ public class ConvertsData implements IConvertsData {
         }).collect(Collectors.toList());
     }
 
+    public List<Author> authorModelToAuthorDTO(List<AuthorModel> authorModels) {
+        return authorModels.stream().map(a -> new Author(a.getName(), a.getBirthYear(), a.getDeathYear()))
+                .collect(Collectors.toList());
+    }
 }

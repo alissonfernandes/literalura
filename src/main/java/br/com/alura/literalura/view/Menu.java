@@ -1,5 +1,6 @@
 package br.com.alura.literalura.view;
 
+import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
 import br.com.alura.literalura.service.BookService;
 import java.util.List;
@@ -20,6 +21,7 @@ public class Menu {
                 Escolha o número de sua opção: 
                 1 - Buscar livro pelo título
                 2 - Listar livros registrados
+                3 - Listar autores registrados
                 0 - Sair
                 """;
         while (true) {
@@ -34,6 +36,9 @@ public class Menu {
                     break;
                 case 2:
                     getAllBooks();
+                    break;
+                case 3:
+                    getAllAuthors();
                     break;
                 case 0:
                     System.exit(0);
@@ -73,7 +78,6 @@ public class Menu {
 
     private void getAllBooks(){
         List<Book> books = bookService.getAllBooks();
-        System.out.println("");
         books.forEach(b -> {
             String show = """
                     ----- LIVRO -----
@@ -86,4 +90,17 @@ public class Menu {
             System.out.println(String.format(show, b.title(), b.authors().getFirst().name(), b.languages().getFirst(), b.downloadCount()));
         });
     }
+
+    private void getAllAuthors() {
+        List<Author> authors = bookService.getAllAuthor();
+        authors.forEach(a -> {
+            String show = """
+                    Autor: %s
+                    Ano de nascimento: %d
+                    Ano de falecimento: %d
+                    """;
+            System.out.println(String.format(show, a.name(), a.birthYear(), a.deathYear()));
+        });
+    }
+
 }
