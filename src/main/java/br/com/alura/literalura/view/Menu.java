@@ -19,6 +19,7 @@ public class Menu {
         String menu = """
                 Escolha o número de sua opção: 
                 1 - Buscar livro pelo título
+                2 - Listar livros registrados
                 0 - Sair
                 """;
         while (true) {
@@ -30,6 +31,9 @@ public class Menu {
             switch (op) {
                 case 1:
                     searchBookByTitle();
+                    break;
+                case 2:
+                    getAllBooks();
                     break;
                 case 0:
                     System.exit(0);
@@ -65,5 +69,10 @@ public class Menu {
         System.out.println("Salvar " + book.title() + " no bando de dados [s/n]");
         String res = scanner.nextLine();
         if (res.equals("s")) bookService.save(book);
+    }
+
+    private void getAllBooks(){
+        List<Book> books = bookService.getAllBooks();
+        System.out.println(books.toString());
     }
 }

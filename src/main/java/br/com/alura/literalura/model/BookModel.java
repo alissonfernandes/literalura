@@ -24,12 +24,15 @@ public class BookModel {
     @ManyToOne(cascade = CascadeType.MERGE)
     private AuthorModel author;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<LanguageModel> languages;
+
+    private Integer downloadCount;
 
     public BookModel(Book bookDTO) {
         title = bookDTO.title();
         author = new AuthorModel(bookDTO.authors().get(0));
         languages = bookDTO.languages().stream().map(l -> new LanguageModel(l)).collect(Collectors.toList());
+        downloadCount = bookDTO.downloadCount();
     }
 }

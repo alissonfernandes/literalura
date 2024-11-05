@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +50,11 @@ public class BookService {
             bookToSave.setAuthor(authorSaved);
         }
         bookRepository.save(bookToSave);
+    }
+
+    public List<Book> getAllBooks() {
+        List<BookModel> bookFound = bookRepository.findAll();
+        return convertsData.bookModelToBookDTO(bookFound);
     }
 
 }
