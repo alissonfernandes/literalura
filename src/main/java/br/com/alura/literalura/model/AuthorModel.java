@@ -28,6 +28,6 @@ public class AuthorModel {
     public AuthorModel(Author authorDTO) {
         name = authorDTO.name();
         birthYear = authorDTO.birthYear();
-        deathYear = authorDTO.birthYear();
+        deathYear = authorDTO.deathYear();
     }
 }
