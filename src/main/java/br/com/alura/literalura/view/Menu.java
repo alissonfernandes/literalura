@@ -3,6 +3,7 @@ package br.com.alura.literalura.view;
 import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
 import br.com.alura.literalura.service.BookService;
+
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class Menu {
                 1 - Buscar livro pelo título
                 2 - Listar livros registrados
                 3 - Listar autores registrados
+                4 - Listar autores vivos em um determinado ano
                 0 - Sair
                 """;
         while (true) {
@@ -39,6 +41,9 @@ public class Menu {
                     break;
                 case 3:
                     getAllAuthors();
+                    break;
+                case 4:
+                    getAllAuthorsAlive();
                     break;
                 case 0:
                     System.exit(0);
@@ -76,7 +81,7 @@ public class Menu {
         if (res.equals("s")) bookService.save(book);
     }
 
-    private void getAllBooks(){
+    private void getAllBooks() {
         List<Book> books = bookService.getAllBooks();
         books.forEach(b -> {
             String show = """
@@ -93,6 +98,18 @@ public class Menu {
 
     private void getAllAuthors() {
         List<Author> authors = bookService.getAllAuthor();
+        showAuthor(authors);
+    }
+
+    private void getAllAuthorsAlive() {
+        System.out.println("Insira o ano que deseja pesquisar: ");
+        int year = scanner.nextInt();
+        scanner.nextLine();
+        List<Author> authorsAlive = bookService.getAllAuthorsAliveIn(year);
+        showAuthor(authorsAlive);
+    }
+
+    private void showAuthor(List<Author> authors) {
         authors.forEach(a -> {
             String show = """
                     Autor: %s

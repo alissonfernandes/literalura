@@ -62,4 +62,9 @@ public class BookService {
         return convertsData.authorModelToAuthorDTO(authorFound);
     }
 
+    public List<Author> getAllAuthorsAliveIn(Integer year) {
+        List<AuthorModel> authorsAlive = authorRepository.getAllAliveIn(year);
+        return convertsData.authorModelToAuthorDTO(authorsAlive);
+    }
+
 }
