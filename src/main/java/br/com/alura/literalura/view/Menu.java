@@ -2,11 +2,12 @@ package br.com.alura.literalura.view;
 
 import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
+import br.com.alura.literalura.exception.booksNotFoundException;
 import br.com.alura.literalura.service.BookService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Menu {
 
@@ -24,6 +25,7 @@ public class Menu {
                 2 - Listar livros registrados
                 3 - Listar autores registrados
                 4 - Listar autores vivos em um determinado ano
+                5 - listar livros em um determinado idioma
                 0 - Sair
                 """;
         while (true) {
@@ -45,6 +47,9 @@ public class Menu {
                 case 4:
                     getAllAuthorsAlive();
                     break;
+                case 5:
+                    getAllBooksLanguage();
+                    break;
                 case 0:
                     System.exit(0);
             }
@@ -56,25 +61,7 @@ public class Menu {
         String title = scanner.nextLine();
         Book book = bookService.search(title);
 
-        String mensage = """
-                Título: %s
-                Autores: %s
-                Linguagem: %s
-                Downloads: %d
-                """;
-        List<String> authors = book.authors().stream().map(a -> a.name()).collect(Collectors.toList());
-
-        String author = "";
-        for (String authorBook : authors) author += authorBook;
-
-        String language = "";
-        for (String languageBook : book.languages()) language += languageBook;
-
-        System.out.println(String.format(mensage,
-                book.title(),
-                author,
-                language,
-                book.downloadCount()));
+        printBooks(Arrays.asList(book));
 
         System.out.println("Salvar " + book.title() + " no bando de dados [s/n]");
         String res = scanner.nextLine();
@@ -83,17 +70,7 @@ public class Menu {
 
     private void getAllBooks() {
         List<Book> books = bookService.getAllBooks();
-        books.forEach(b -> {
-            String show = """
-                    ----- LIVRO -----
-                    Título: %s
-                    Autor: %s
-                    Indioma: %s
-                    Número de downloads: %d
-                    ------------------
-                    """;
-            System.out.println(String.format(show, b.title(), b.authors().getFirst().name(), b.languages().getFirst(), b.downloadCount()));
-        });
+        printBooks(books);
     }
 
     private void getAllAuthors() {
@@ -107,6 +84,35 @@ public class Menu {
         scanner.nextLine();
         List<Author> authorsAlive = bookService.getAllAuthorsAliveIn(year);
         showAuthor(authorsAlive);
+    }
+
+    private void getAllBooksLanguage() {
+        System.out.println("Insira um idioma para realizar a busca: ");
+        String language = scanner.nextLine();
+        try {
+            List<Book> books = bookService.getAllBooksByLanguage(language);
+            printBooks(books);
+        } catch (booksNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void printBooks(List<Book> books) {
+        books.forEach(b -> {
+            String show = """
+                    ----- LIVRO -----
+                    Título: %s
+                    Autor: %s
+                    Indioma: %s
+                    Número de downloads: %d
+                    ------------------
+                    """;
+
+            String language = "";
+            for (String languageBook : b.languages()) language += languageBook;
+
+            System.out.println(String.format(show, b.title(), b.authors().getFirst().name(), language, b.downloadCount()));
+        });
     }
 
     private void showAuthor(List<Author> authors) {

@@ -3,6 +3,7 @@ package br.com.alura.literalura.service;
 import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
 import br.com.alura.literalura.dto.Search;
+import br.com.alura.literalura.exception.booksNotFoundException;
 import br.com.alura.literalura.model.AuthorModel;
 import br.com.alura.literalura.model.BookModel;
 import br.com.alura.literalura.repository.AuthorRepository;
@@ -65,6 +66,12 @@ public class BookService {
     public List<Author> getAllAuthorsAliveIn(Integer year) {
         List<AuthorModel> authorsAlive = authorRepository.getAllAliveIn(year);
         return convertsData.authorModelToAuthorDTO(authorsAlive);
+    }
+
+    public List<Book> getAllBooksByLanguage(String language) throws booksNotFoundException {
+        List<BookModel> booksFound = bookRepository.findByLanguage(language);
+        if (booksFound.isEmpty()) throw new booksNotFoundException("Não existem livros nesse idioma no banco de dados.");
+        return convertsData.bookModelToBookDTO(booksFound);
     }
 
 }
