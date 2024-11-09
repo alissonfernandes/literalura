@@ -19,7 +19,7 @@ public class ConsumeService {
         client = HttpClient.newHttpClient();
     }
 
-    public String get(URI uri) {
+    protected String getResponse(URI uri) {
         request = HttpRequest.newBuilder().uri(uri).build();
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());

@@ -59,13 +59,20 @@ public class Menu {
     private void searchBookByTitle() {
         System.out.print("Digite o título do livro: ");
         String title = scanner.nextLine();
-        Book book = bookService.search(title);
+        Book book = null;
 
-        printBooks(Arrays.asList(book));
+        try {
+            book = bookService.search(title);
+            printBooks(Arrays.asList(book));
 
-        System.out.println("Salvar " + book.title() + " no bando de dados [s/n]");
-        String res = scanner.nextLine();
-        if (res.equals("s")) bookService.save(book);
+            System.out.println("Salvar " + book.title() + " no bando de dados [s/n]");
+            String res = scanner.nextLine();
+
+            if (res.equals("s")) bookService.save(book);
+
+        } catch (booksNotFoundException e) {
+            System.out.println("\n" + e.getMessage() + "\n");
+        }
     }
 
     private void getAllBooks() {
@@ -93,7 +100,7 @@ public class Menu {
             List<Book> books = bookService.getAllBooksByLanguage(language);
             printBooks(books);
         } catch (booksNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("\n" + e.getMessage() + "\n");
         }
     }
 

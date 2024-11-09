@@ -2,7 +2,6 @@ package br.com.alura.literalura.service;
 
 import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
-import br.com.alura.literalura.dto.Search;
 import br.com.alura.literalura.exception.booksNotFoundException;
 import br.com.alura.literalura.model.AuthorModel;
 import br.com.alura.literalura.model.BookModel;
@@ -11,14 +10,13 @@ import br.com.alura.literalura.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BookService {
 
-    private ConsumeService consumeService;
+    private GutendexAPIService gutendex;
     private ConvertsData convertsData;
 
     @Autowired
@@ -28,15 +26,12 @@ public class BookService {
     private AuthorRepository authorRepository;
 
     public BookService() {
-        consumeService = new ConsumeService();
+        gutendex = new GutendexAPIService();
         convertsData = new ConvertsData();
     }
 
-    public Book search(String bookName) {
-        URI uri = URI.create("http://gutendex.com/books/?search=" + bookName.replace(" ", "%20"));
-        String jsonResponse = consumeService.get(uri);
-        Search search = convertsData.getDataObject(jsonResponse, Search.class);
-        return search.results().get(0);
+    public Book search(String bookName) throws booksNotFoundException {
+        return gutendex.searchBook(bookName);
     }
 
     public void save(Book book) {
