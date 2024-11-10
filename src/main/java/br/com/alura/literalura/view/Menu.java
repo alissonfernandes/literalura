@@ -2,7 +2,7 @@ package br.com.alura.literalura.view;
 
 import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
-import br.com.alura.literalura.exception.booksNotFoundException;
+import br.com.alura.literalura.exception.BookNotFoundException;
 import br.com.alura.literalura.service.BookService;
 
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class Menu {
 
             switch (op) {
                 case 1:
-                    searchBookByTitle();
+                    getBook();
                     break;
                 case 2:
                     getAllBooks();
@@ -56,21 +56,30 @@ public class Menu {
         }
     }
 
-    private void searchBookByTitle() {
+    private void getBook() {
         System.out.print("Digite o título do livro: ");
-        String title = scanner.nextLine();
+        String titleBook = scanner.nextLine();
+
+        try {
+            printBook(bookService.get(titleBook));
+        } catch (BookNotFoundException e) {
+           searchBookByTitle(titleBook);
+        }
+    }
+
+    private void searchBookByTitle(String titleBook) {
         Book book = null;
 
         try {
-            book = bookService.search(title);
+            book = bookService.search(titleBook);
             printBooks(Arrays.asList(book));
 
-            System.out.println("Salvar " + book.title() + " no bando de dados [s/n]");
+            System.out.println("O livro: \"" + book.title() + "\" não está salvo no bando de dados. Deseja salva-lo [s/n]");
             String res = scanner.nextLine();
 
             if (res.equals("s")) bookService.save(book);
 
-        } catch (booksNotFoundException e) {
+        } catch (BookNotFoundException e) {
             System.out.println("\n" + e.getMessage() + "\n");
         }
     }
@@ -99,9 +108,24 @@ public class Menu {
         try {
             List<Book> books = bookService.getAllBooksByLanguage(language);
             printBooks(books);
-        } catch (booksNotFoundException e) {
+        } catch (BookNotFoundException e) {
             System.out.println("\n" + e.getMessage() + "\n");
         }
+    }
+
+    private void printBook(Book b) {
+        String show = """
+                    ----- LIVRO -----
+                    Título: %s
+                    Autor: %s
+                    Indioma: %s
+                    Número de downloads: %d
+                    ------------------
+                    """;
+        String language = "";
+        for (String languageBook : b.languages()) language += languageBook;
+
+        System.out.println(String.format(show, b.title(), b.authors().getFirst().name(), language, b.downloadCount()));
     }
 
     private void printBooks(List<Book> books) {

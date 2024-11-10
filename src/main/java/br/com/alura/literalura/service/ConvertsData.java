@@ -4,6 +4,7 @@ import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
 import br.com.alura.literalura.model.AuthorModel;
 import br.com.alura.literalura.model.BookModel;
+import br.com.alura.literalura.model.LanguageModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,8 +38,26 @@ public class ConvertsData implements IConvertsData {
         }).collect(Collectors.toList());
     }
 
+    // Converte bookmodel para bookDTO
+    public Book bookModelToBookDTO(BookModel bookModel) {
+        return new Book(bookModel.getTitle(),
+                 Arrays.asList(authorModelToAuthorDTO(bookModel.getAuthor())),
+                 languageModelToLanguageDTO(bookModel.getLanguages()),
+                 bookModel.getDownloadCount());
+    }
+
+    // Converte authorModel para authorDTO
+    public Author authorModelToAuthorDTO(AuthorModel authorModel) {
+        return new Author(authorModel.getName(), authorModel.getBirthYear(), authorModel.getDeathYear());
+    }
+
     public List<Author> authorModelToAuthorDTO(List<AuthorModel> authorModels) {
         return authorModels.stream().map(a -> new Author(a.getName(), a.getBirthYear(), a.getDeathYear()))
                 .collect(Collectors.toList());
+    }
+
+    // Converte lista do tipo languageModel para uma lista de String
+    public List<String> languageModelToLanguageDTO(List<LanguageModel> languageModel) {
+        return languageModel.stream().map(l -> l.getLanguage()).collect(Collectors.toList());
     }
 }

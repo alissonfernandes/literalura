@@ -2,7 +2,7 @@ package br.com.alura.literalura.service;
 
 import br.com.alura.literalura.dto.Author;
 import br.com.alura.literalura.dto.Book;
-import br.com.alura.literalura.exception.booksNotFoundException;
+import br.com.alura.literalura.exception.BookNotFoundException;
 import br.com.alura.literalura.model.AuthorModel;
 import br.com.alura.literalura.model.BookModel;
 import br.com.alura.literalura.repository.AuthorRepository;
@@ -30,8 +30,14 @@ public class BookService {
         convertsData = new ConvertsData();
     }
 
-    public Book search(String bookName) throws booksNotFoundException {
+    public Book search(String bookName) throws BookNotFoundException {
         return gutendex.searchBook(bookName);
+    }
+
+    public Book get(String bookName) throws BookNotFoundException {
+        Optional<BookModel> bookFound = bookRepository.findByTitleContainingIgnoreCase(bookName);
+        if (bookFound.isPresent()) return convertsData.bookModelToBookDTO(bookFound.get());
+        else throw new BookNotFoundException("Livro não encontrado");
     }
 
     public void save(Book book) {
@@ -63,9 +69,9 @@ public class BookService {
         return convertsData.authorModelToAuthorDTO(authorsAlive);
     }
 
-    public List<Book> getAllBooksByLanguage(String language) throws booksNotFoundException {
+    public List<Book> getAllBooksByLanguage(String language) throws BookNotFoundException {
         List<BookModel> booksFound = bookRepository.findByLanguage(language);
-        if (booksFound.isEmpty()) throw new booksNotFoundException("Não existem livros nesse idioma no banco de dados.");
+        if (booksFound.isEmpty()) throw new BookNotFoundException("Não existem livros nesse idioma no banco de dados.");
         return convertsData.bookModelToBookDTO(booksFound);
     }
 
