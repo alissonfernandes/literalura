@@ -103,10 +103,11 @@ public class Menu {
     }
 
     private void getAllBooksLanguage() {
-        System.out.println("Insira um idioma para realizar a busca: ");
+        System.out.println("Insira um idioma para realizar a busca(pt, en, fr): ");
         String language = scanner.nextLine();
         try {
             List<Book> books = bookService.getAllBooksByLanguage(language);
+            System.out.println("==========\n\nTotal de livros encontrados: " + books.stream().count() + "\n");
             printBooks(books);
         } catch (BookNotFoundException e) {
             System.out.println("\n" + e.getMessage() + "\n");
