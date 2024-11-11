@@ -1,4 +1,4 @@
-# Literalura
+ # Literalura
 LiterAlura é um catálogo de livros que permite você realizar consultas e obter informações sobre livros através de uma API específica.
 
 ![Badge em Desenvolviment](http://img.shields.io/static/v1?label=STATUS&message=Concluído&color=gree&style=for-the-badge)
@@ -48,3 +48,4 @@ src/
 │                  └── literalura/
 │           
 ```
+ ![badge literalura](https://github.com/user-attachments/assets/0fd7ebaf-f28b-4e36-838b-eb06a84487ce)
